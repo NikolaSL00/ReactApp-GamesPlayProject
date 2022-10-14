@@ -24,9 +24,9 @@ const Home = () => {
             <div id="home-page">
                 <h1>Latest Games</h1>
 
-                {games.map(x => <LatestGame game={x} />)}
-
-                {games.length < 1 ? <p className="no-articles">No games yet</p> : ''}
+                {games.length > 0
+                    ? games.map(x => <LatestGame key={x._id} game={x} />)
+                    : <p className="no-articles">No games yet</p>}
 
             </div>
         </section>
