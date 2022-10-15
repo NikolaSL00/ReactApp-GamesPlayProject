@@ -9,7 +9,7 @@ const Header = () => {
                 </Link>
             </h1>
             <nav>
-                <Link to="/catalog">All games</Link>
+                <Link to="/catalogue">All games</Link>
                 {/* Logged-in users */}
                 <div id="user">
                     <Link to="/create">Create Game</Link>
