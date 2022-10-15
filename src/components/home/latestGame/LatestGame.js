@@ -1,7 +1,6 @@
 const LatestGame = ({
     game
 }) => {
-    console.log(game);
     return (
         <div className="game">
             <div className="image-wrap">
