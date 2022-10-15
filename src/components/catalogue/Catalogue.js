@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as gameService from "../../services/gameService";
 
-import Game from "./game/Game";
+import CatalogGame from "./game/CatalogGame";
 
 const Catalogue = () => {
     const [games, setGames] = useState([]);
@@ -9,13 +9,13 @@ const Catalogue = () => {
     useEffect(() => {
         gameService.getAll()
             .then(games => setGames(games));
-    }, [games]);
+    }, []);
 
     return (
         <section id="catalog-page">
             <h1>All Games</h1>
             {games.length > 0
-                ? games.map(x => <Game key={x._id} game={x} />)
+                ? games.map(x => <CatalogGame key={x._id} game={x} />)
                 : <h3 className="no-articles">No games yet</h3>
             }
 
