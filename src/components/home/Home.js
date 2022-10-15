@@ -12,7 +12,7 @@ const Home = () => {
             .then(result => {
                 setGames(result);
             });
-    }, []);
+    }, [games]);
 
     return (
         <section id="welcome-world">
