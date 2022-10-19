@@ -43,16 +43,16 @@ const GameDetails = () => {
                         }
                     </ul>
                 </div>
-                <div className="buttons">
+                {/* <div className="buttons">
                     <a href="#" className="button">
                         Edit
                     </a>
                     <a href="#" className="button">
                         Delete
                     </a>
-                </div>
+                </div> */}
             </div>
-            <article className="create-comment">
+            {/* <article className="create-comment">
                 <label>Add new comment:</label>
                 <form className="form">
                     <textarea
@@ -66,7 +66,7 @@ const GameDetails = () => {
                         defaultValue="Add Comment"
                     />
                 </form>
-            </article>
+            </article> */}
         </section>
     );
 };

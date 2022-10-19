@@ -1,33 +1,53 @@
 import './App.css';
 
 import { Route, Routes } from "react-router-dom";
+
 import Header from './components/header/Header';
 import Home from './components/home/Home';
 import Login from './components/login/Login';
 import Register from './components/register/Register';
+import Logout from './components/logout/Logout';
 import CreateGame from './components/createGame/CreateGame';
 import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
 
+import { AuthContext } from "./contexts/AuthContext";
+import { useState } from 'react';
+
 
 function App() {
-    return (
-        <div id="box">
-            <Header />
-            {/* Main Content */}
-            <main id="main-content">
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/register' element={<Register />} />
-                    <Route path='/create' element={<CreateGame />} />
-                    <Route path='/catalogue' element={<Catalogue />} />
-                    <Route path='/game/:gameId' element={<GameDetails />} />
-                </Routes>
+    const [auth, setAuth] = useState({});
 
-            </main>
-            {/* Edit Page ( Only for the creator )*/}
-            {/* <section id="edit-page" className="auth">
+    const userLogin = (authData) => {
+        //there the access to the authState can be controlled
+        // so we do not pass the pure setAuth to the Context
+        // the change of the state of the app component should happen in the APP COMPONENT
+        setAuth(authData);
+    }
+
+    const userLogout = (authData) => {
+        setAuth({});
+    }
+
+    return (
+        <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
+            <div id="box">
+                <Header />
+
+                <main id="main-content">
+                    <Routes>
+                        <Route path='/' element={<Home />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/register' element={<Register />} />
+                        <Route path='/logout' element={<Logout />} />
+                        <Route path='/create' element={<CreateGame />} />
+                        <Route path='/catalogue' element={<Catalogue />} />
+                        <Route path='/game/:gameId' element={<GameDetails />} />
+                    </Routes>
+
+                </main>
+                {/* Edit Page ( Only for the creator )*/}
+                {/* <section id="edit-page" className="auth">
                 <form id="edit">
                     <div className="container">
                         <h1>Edit Game</h1>
@@ -51,7 +71,8 @@ function App() {
                     </div>
                 </form>
             </section> */}
-        </div>
+            </div>
+        </AuthContext.Provider>
     );
 }
 
