@@ -1,6 +1,6 @@
 import './App.css';
-
-import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Header from './components/header/Header';
 import Home from './components/home/Home';
@@ -12,12 +12,17 @@ import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
 
 import { AuthContext } from "./contexts/AuthContext";
+import { GameContext } from './contexts/GameContext';
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { LOCAL_STORAGE_KEY } from './config/constants';
+import * as gameService from "./services/gameService";
+import { EditGame } from './components/editGame/EditGame';
 
 
 function App() {
     const [auth, setAuth] = useLocalStorage(LOCAL_STORAGE_KEY, {});
+    const [games, setGames] = useState([]);
+    const navigate = useNavigate();
 
     const userLogin = (authData) => {
         //there the access to the authState can be controlled
@@ -25,10 +30,27 @@ function App() {
         // the change of the state of the app component should happen in the APP COMPONENT
         setAuth(authData);
     }
-
     const userLogout = () => {
         setAuth({});
     }
+    const gameAdd = (gameData) => {
+        setGames(games => ([
+            ...games,
+            gameData
+        ]));
+    }
+    const gameEdit = (gameId, gameData) => {
+        setGames(state => [
+            state.map(x => x._id === gameId ? gameData : x)
+        ]);
+    }
+
+    useEffect(() => {
+        gameService.getAll()
+            .then(result => {
+                setGames(result);
+            });
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
@@ -36,42 +58,19 @@ function App() {
                 <Header />
 
                 <main id="main-content">
-                    <Routes>
-                        <Route path='/' element={<Home />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/register' element={<Register />} />
-                        <Route path='/logout' element={<Logout />} />
-                        <Route path='/create' element={<CreateGame />} />
-                        <Route path='/catalogue' element={<Catalogue />} />
-                        <Route path='/game/:gameId' element={<GameDetails />} />
-                    </Routes>
-
+                    <GameContext.Provider value={{ games, gameAdd, gameEdit, setGames }}>
+                        <Routes>
+                            <Route path='/' element={<Home />} />
+                            <Route path='/login' element={<Login />} />
+                            <Route path='/register' element={<Register />} />
+                            <Route path='/logout' element={<Logout />} />
+                            <Route path='/create' element={<CreateGame />} />
+                            <Route path='/catalogue' element={<Catalogue />} />
+                            <Route path='/edit/:gameId' element={<EditGame />} />
+                            <Route path='/game/:gameId' element={<GameDetails />} />
+                        </Routes>
+                    </GameContext.Provider>
                 </main>
-                {/* Edit Page ( Only for the creator )*/}
-                {/* <section id="edit-page" className="auth">
-                <form id="edit">
-                    <div className="container">
-                        <h1>Edit Game</h1>
-                        <label htmlFor="leg-title">Legendary title:</label>
-                        <input type="text" id="title" name="title" defaultValue="" />
-                        <label htmlFor="category">Category:</label>
-                        <input type="text" id="category" name="category" defaultValue="" />
-                        <label htmlFor="levels">MaxLevel:</label>
-                        <input
-                            type="number"
-                            id="maxLevel"
-                            name="maxLevel"
-                            min={1}
-                            defaultValue=""
-                        />
-                        <label htmlFor="game-img">Image:</label>
-                        <input type="text" id="imageUrl" name="imageUrl" defaultValue="" />
-                        <label htmlFor="summary">Summary:</label>
-                        <textarea name="summary" id="summary" defaultValue={""} />
-                        <input className="btn submit" type="submit" defaultValue="Edit Game" />
-                    </div>
-                </form>
-            </section> */}
             </div>
         </AuthContext.Provider>
     );

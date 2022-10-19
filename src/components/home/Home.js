@@ -4,13 +4,12 @@ import LatestGame from "./latestGame/LatestGame";
 
 
 const Home = () => {
-
-    const [games, setGames] = useState([]);
+    const [latest, setLatest] = useState([]);
 
     useEffect(() => {
-        gameService.getLatestGames()
+        gameService.getLatest()
             .then(result => {
-                setGames(result);
+                setLatest(result);
             });
     }, []);
 
@@ -24,8 +23,8 @@ const Home = () => {
             <div id="home-page">
                 <h1>Latest Games</h1>
 
-                {games.length > 0
-                    ? games.map(x => <LatestGame key={x._id} game={x} />)
+                {latest.length > 0
+                    ? latest.map(x => <LatestGame key={x._id} game={x} />)
                     : <p className="no-articles">No games yet</p>}
 
             </div>

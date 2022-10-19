@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
-import * as gameService from "../../services/gameService";
-
+import { useContext, useEffect } from "react";
+import { GameContext } from "../../contexts/GameContext";
 import CatalogGame from "./game/CatalogGame";
+import * as gameService from '../../services/gameService';
 
 const Catalogue = () => {
-    const [games, setGames] = useState([]);
+    const { games, setGames } = useContext(GameContext);
 
     useEffect(() => {
         gameService.getAll()
-            .then(games => setGames(games));
+            .then(result => {
+                setGames(result);
+            });
     }, []);
 
     return (
@@ -18,8 +20,6 @@ const Catalogue = () => {
                 ? games.map(x => <CatalogGame key={x._id} game={x} />)
                 : <h3 className="no-articles">No games yet</h3>
             }
-
-
         </section>
     );
 }

@@ -1,19 +1,23 @@
 import * as request from "./util/requester";
 
-const baseUrl = 'http://localhost:3030';
+const baseUrl = 'http://localhost:3030/data/games';
 
 export const getAll = () => request.get(
-    `${baseUrl}/data/games`
+    `${baseUrl}`
 );
 
-export const getLatestGames = () => request.get(
-    `${baseUrl}/data/games?sortBy=_createdOn%20desc&distinct=category`
+export const getLatest = () => request.get(
+    `${baseUrl}?sortBy=_createdOn%20desc&distinct=category`
 );
 
-export const getGameDetails = (gameId) => request.get(
-    `${baseUrl}/data/games/${gameId}`
+export const getDetails = (gameId) => request.get(
+    `${baseUrl}/${gameId}`
 );
 
-export const getAllComments = (gameId) => request.get(
-    `${baseUrl}/data/comments?where=gameId%3D%22${gameId}%22`
+export const create = (gameData) => request.post(
+    `${baseUrl}`, gameData
+);
+
+export const edit = (gameId, gameData) => request.put(
+    `${baseUrl}/${gameId}`, gameData
 );

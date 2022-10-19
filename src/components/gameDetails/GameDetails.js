@@ -1,22 +1,29 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-import * as gameService from "../../services/gameService";
+
+import * as commentService from "../../services/commentService";
 import Comment from "./Comment";
+import { GameContext } from "../../contexts/GameContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const GameDetails = () => {
-
+    const { games } = useContext(GameContext);
     const { gameId } = useParams();
     const [game, setGame] = useState({});
     const [comments, setComments] = useState([]);
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        gameService.getGameDetails(gameId)
-            .then(detailedGame => setGame(detailedGame));
-    }, []);
+        games.map(x => {
+            if (x._id === gameId) {
+                setGame(x);
+            }
+        });
+    }, [gameId]);
 
     useEffect(() => {
-        gameService.getAllComments(gameId)
+        commentService.getAllComments(gameId)
             .then(allComments => setComments(allComments));
     }, []);
 
@@ -43,14 +50,20 @@ const GameDetails = () => {
                         }
                     </ul>
                 </div>
-                {/* <div className="buttons">
-                    <a href="#" className="button">
-                        Edit
-                    </a>
-                    <a href="#" className="button">
-                        Delete
-                    </a>
-                </div> */}
+
+                {
+                    user._id === game._ownerId &&
+                    <div className="buttons">
+                        <Link to={`/edit/${gameId}`} className="button">
+                            Edit
+                        </Link>
+                        <Link to={`/delete/${gameId}`} className="button">
+                            Delete
+                        </Link>
+                    </div>
+                }
+
+
             </div>
             {/* <article className="create-comment">
                 <label>Add new comment:</label>

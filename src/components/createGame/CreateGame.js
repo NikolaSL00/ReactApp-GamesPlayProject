@@ -1,7 +1,27 @@
+import * as gameService from "../../services/gameService";
+
+import { GameContext } from "../../contexts/GameContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 const CreateGame = () => {
+    const navigate = useNavigate();
+    const { gameAdd } = useContext(GameContext);
+
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+
+        const gameData = Object.fromEntries(new FormData(e.target));
+
+        gameService.create(gameData)
+            .then(result => {
+                gameAdd(result);
+                navigate('/catalogue');
+            });
+    }
+
     return (
         <section id="create-page" className="auth">
-            <form id="create">
+            <form id="create" onSubmit={onSubmitHandler}>
                 <div className="container">
                     <h1>Create Game</h1>
                     <label htmlFor="leg-title">Legendary title:</label>
@@ -38,7 +58,7 @@ const CreateGame = () => {
                     <input
                         className="btn submit"
                         type="submit"
-                        defaultValue="Create Game"
+                        value="Create Game"
                     />
                 </div>
             </form>
