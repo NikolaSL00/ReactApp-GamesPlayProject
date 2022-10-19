@@ -12,11 +12,12 @@ import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
 
 import { AuthContext } from "./contexts/AuthContext";
-import { useState } from 'react';
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { LOCAL_STORAGE_KEY } from './config/constants';
 
 
 function App() {
-    const [auth, setAuth] = useState({});
+    const [auth, setAuth] = useLocalStorage(LOCAL_STORAGE_KEY, {});
 
     const userLogin = (authData) => {
         //there the access to the authState can be controlled

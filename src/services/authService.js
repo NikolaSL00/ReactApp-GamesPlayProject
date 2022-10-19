@@ -1,4 +1,6 @@
 import * as request from "./util/requester"
+import { LOCAL_STORAGE_KEY } from '../config/constants';
+
 
 const baseUrl = 'http://localhost:3030/users';
 
@@ -15,6 +17,8 @@ export const logout = async (accessToken) => {
                 'X-Authorization': accessToken
             }
         });
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+
         return response;
     } catch (error) {
         console.error(error);
