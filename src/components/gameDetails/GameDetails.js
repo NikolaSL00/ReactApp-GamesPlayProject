@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 
 import * as commentService from "../../services/commentService";
+import * as gameService from '../../services/gameService';
 import Comment from "./Comment";
 import { GameContext } from "../../contexts/GameContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -13,6 +14,7 @@ const GameDetails = () => {
     const [game, setGame] = useState({});
     const [comments, setComments] = useState([]);
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         games.map(x => {
@@ -26,6 +28,14 @@ const GameDetails = () => {
         commentService.getAllComments(gameId)
             .then(allComments => setComments(allComments));
     }, []);
+
+    const deleteHandler = (e) => {
+        gameService.del(gameId)
+            .then(res => {
+            console.log(res);
+            navigate('/catalogue');
+            });
+    }
 
     return (
         <section id="game-details">
@@ -57,9 +67,9 @@ const GameDetails = () => {
                         <Link to={`/edit/${gameId}`} className="button">
                             Edit
                         </Link>
-                        <Link to={`/delete/${gameId}`} className="button">
+                        <button onClick={deleteHandler} className="button">
                             Delete
-                        </Link>
+                        </button>
                     </div>
                 }
 
