@@ -1,13 +1,23 @@
+import { LOCAL_STORAGE_KEY } from "../../config/constants";
+
 const request = async (method, url, data) => {
     try {
+        const authData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const auth = JSON.parse(authData || '{}');
+        let headers = {};
+        if (auth.accessToken) {
+            headers['X-Authorization'] = auth.accessToken;
+        }
+
         let buildRequest;
 
         if (method === "GET") {
-            buildRequest = fetch(url);
+            buildRequest = fetch(url, { headers });
         } else {
             buildRequest = fetch(url, {
                 method,
                 headers: {
+                    ...headers,
                     'Content-Type': 'Application/json',
                 },
                 body: JSON.stringify(data),

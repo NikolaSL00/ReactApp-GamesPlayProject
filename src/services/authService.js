@@ -17,7 +17,7 @@ export const logout = async (accessToken) => {
                 'X-Authorization': accessToken
             }
         });
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
+        // localStorage.removeItem(LOCAL_STORAGE_KEY);
 
         return response;
     } catch (error) {

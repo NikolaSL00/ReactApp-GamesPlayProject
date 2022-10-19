@@ -26,7 +26,7 @@ function App() {
         setAuth(authData);
     }
 
-    const userLogout = (authData) => {
+    const userLogout = () => {
         setAuth({});
     }
 
