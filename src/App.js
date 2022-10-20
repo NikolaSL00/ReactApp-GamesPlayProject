@@ -11,27 +11,16 @@ import CreateGame from './components/createGame/CreateGame';
 import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
 
-import { AuthContext } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import { GameContext } from './contexts/GameContext';
-import { useLocalStorage } from "./hooks/useLocalStorage";
-import { LOCAL_STORAGE_KEY } from './config/constants';
 import * as gameService from "./services/gameService";
 import { EditGame } from './components/editGame/EditGame';
 
 
 function App() {
-    const [auth, setAuth] = useLocalStorage(LOCAL_STORAGE_KEY, {});
     const [games, setGames] = useState([]);
 
-    const userLogin = (authData) => {
-        //there the access to the authState can be controlled
-        // so we do not pass the pure setAuth to the Context
-        // the change of the state of the app component should happen in the APP COMPONENT
-        setAuth(authData);
-    }
-    const userLogout = () => {
-        setAuth({});
-    }
+    
     const gameAdd = (gameData) => {
         setGames(games => ([
             ...games,
@@ -57,7 +46,7 @@ function App() {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
+        <AuthProvider >
             <div id="box">
                 <Header />
 
@@ -76,7 +65,7 @@ function App() {
                     </GameContext.Provider>
                 </main>
             </div>
-        </AuthContext.Provider>
+        </AuthProvider>
     );
 }
 
