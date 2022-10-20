@@ -1,5 +1,4 @@
 import './App.css';
-import { useEffect, useState } from 'react';
 import { Route, Routes } from "react-router-dom";
 
 import Header from './components/header/Header';
@@ -12,46 +11,18 @@ import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
 
 import { AuthProvider } from "./contexts/AuthContext";
-import { GameContext } from './contexts/GameContext';
-import * as gameService from "./services/gameService";
+import { GameProvider } from './contexts/GameContext';
 import { EditGame } from './components/editGame/EditGame';
 
 
 function App() {
-    const [games, setGames] = useState([]);
-
-    
-    const gameAdd = (gameData) => {
-        setGames(games => ([
-            ...games,
-            gameData
-        ]));
-    }
-    const gameEdit = (gameId, gameData) => {
-        setGames(state => [
-            state.map(x => x._id === gameId ? gameData : x)
-        ]);
-    }
-    const gameDelete = (gameId) => {
-        setGames(state => ([
-            state.filter(x => x._id !== gameId)
-        ]));
-    }
-
-    useEffect(() => {
-        gameService.getAll()
-            .then(result => {
-                setGames(result);
-            });
-    }, []);
-
     return (
         <AuthProvider >
             <div id="box">
                 <Header />
 
                 <main id="main-content">
-                    <GameContext.Provider value={{ games, gameAdd, gameEdit, setGames, gameDelete }}>
+                    <GameProvider>
                         <Routes>
                             <Route path='/' element={<Home />} />
                             <Route path='/login' element={<Login />} />
@@ -62,7 +33,7 @@ function App() {
                             <Route path='/edit/:gameId' element={<EditGame />} />
                             <Route path='/game/:gameId' element={<GameDetails />} />
                         </Routes>
-                    </GameContext.Provider>
+                    </GameProvider>
                 </main>
             </div>
         </AuthProvider>
