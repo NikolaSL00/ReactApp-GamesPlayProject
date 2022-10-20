@@ -3,7 +3,7 @@ import { createContext } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { LOCAL_STORAGE_KEY } from '../config/constants';
 
-export const AuthContext = createContext();
+export const AuthContext = createContext({user:{}});
 
 export const AuthProvider = (
     children,
