@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
+
 const Comment = ({
     comment
 }) => {
     return (
         <li className="comment">
-            <p>Content: {comment.content}</p>
+            <p>Content: {comment.comment}</p>
         </li>
     );
 }

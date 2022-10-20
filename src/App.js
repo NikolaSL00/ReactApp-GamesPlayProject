@@ -22,7 +22,6 @@ import { EditGame } from './components/editGame/EditGame';
 function App() {
     const [auth, setAuth] = useLocalStorage(LOCAL_STORAGE_KEY, {});
     const [games, setGames] = useState([]);
-    const navigate = useNavigate();
 
     const userLogin = (authData) => {
         //there the access to the authState can be controlled
@@ -45,6 +44,12 @@ function App() {
         ]);
     }
 
+    const gameDelete = (gameId) => {
+        setGames(state => ([
+            state.filter(x => x._id !== gameId)
+        ]));
+    }
+
     useEffect(() => {
         gameService.getAll()
             .then(result => {
@@ -58,7 +63,7 @@ function App() {
                 <Header />
 
                 <main id="main-content">
-                    <GameContext.Provider value={{ games, gameAdd, gameEdit, setGames }}>
+                    <GameContext.Provider value={{ games, gameAdd, gameEdit, setGames, gameDelete }}>
                         <Routes>
                             <Route path='/' element={<Home />} />
                             <Route path='/login' element={<Login />} />

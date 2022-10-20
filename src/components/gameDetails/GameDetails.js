@@ -15,6 +15,9 @@ const GameDetails = () => {
     const [comments, setComments] = useState([]);
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [comment, setComment] = useState('');
+
+    const { gameDelete } = useContext(GameContext);
 
     useEffect(() => {
         games.map(x => {
@@ -25,17 +28,38 @@ const GameDetails = () => {
     }, [gameId]);
 
     useEffect(() => {
-        commentService.getAllComments(gameId)
-            .then(allComments => setComments(allComments));
+        commentService.getAll(gameId)
+            .then(allComments => {
+                setComments(allComments);
+            });
     }, []);
 
     const deleteHandler = (e) => {
         gameService.del(gameId)
             .then(res => {
-            console.log(res);
-            navigate('/catalogue');
+                gameDelete(gameId);
+                navigate('/catalogue');
             });
     }
+
+    const onChangeHandler = (e) => {
+        setComment(state => e.target.value);
+    }
+
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+
+        const { comment } = Object.fromEntries(new FormData(e.target));
+        setComment(state => '');
+
+        commentService.create({ gameId, comment })
+            .then(result => {
+                setComments(comments => [
+                    ...comments,
+                    result
+                ]);
+            })
+    };
 
     return (
         <section id="game-details">
@@ -55,7 +79,7 @@ const GameDetails = () => {
                     <h2>Comments:</h2>
                     <ul>
                         {comments.length > 0
-                            ? comments.map(x => <Comment comment={x} />)
+                            ? comments.map(x => <Comment key={x._id} comment={x} />)
                             : <p className="no-comment">No comments.</p>
                         }
                     </ul>
@@ -75,13 +99,15 @@ const GameDetails = () => {
 
 
             </div>
-            {/* <article className="create-comment">
+
+            <article className="create-comment">
                 <label>Add new comment:</label>
-                <form className="form">
+                <form className="form" onSubmit={onSubmitHandler}>
                     <textarea
                         name="comment"
                         placeholder="Comment......"
-                        defaultValue={""}
+                        onChange={onChangeHandler}
+                        value={comment}
                     />
                     <input
                         className="btn submit"
@@ -89,7 +115,8 @@ const GameDetails = () => {
                         defaultValue="Add Comment"
                     />
                 </form>
-            </article> */}
+            </article>
+
         </section>
     );
 };
