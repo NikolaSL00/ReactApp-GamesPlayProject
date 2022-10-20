@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Header from './components/header/Header';
 import Home from './components/home/Home';
@@ -43,7 +43,6 @@ function App() {
             state.map(x => x._id === gameId ? gameData : x)
         ]);
     }
-
     const gameDelete = (gameId) => {
         setGames(state => ([
             state.filter(x => x._id !== gameId)
