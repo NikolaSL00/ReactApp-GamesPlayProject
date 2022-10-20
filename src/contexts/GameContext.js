@@ -1,10 +1,10 @@
-import { createContext, useEffect, useState } from "react";
+import { useState, useEffect, createContext } from "react";
+import * as gameService from "../services/gameService";
 
-import * as gameService from '../services/gameService';
 export const GameContext = createContext({ games: [] });
 
 export const GameProvider = ({
-    children
+    children,
 }) => {
     const [games, setGames] = useState([]);
 
@@ -24,16 +24,16 @@ export const GameProvider = ({
             state.filter(x => x._id !== gameId)
         ]));
     }
-
     useEffect(() => {
         gameService.getAll()
             .then(result => {
                 setGames(result);
             });
     }, []);
+
     return (
         <GameContext.Provider value={{ games, gameAdd, gameEdit, setGames, gameDelete }}>
             {children}
         </GameContext.Provider>
     );
-}
+};
