@@ -9,7 +9,7 @@ const Home = () => {
     useEffect(() => {
         gameService.getLatest()
             .then(result => {
-                setLatest(result);
+                setLatest(result.splice(0, 3));
             });
     }, []);
 

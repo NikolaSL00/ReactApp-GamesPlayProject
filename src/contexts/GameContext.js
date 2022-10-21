@@ -1,38 +1,83 @@
-import { useState, useEffect, createContext } from "react";
+import { useEffect, createContext, useReducer } from "react";
 import * as gameService from "../services/gameService";
 
 export const GameContext = createContext({ games: [] });
 
+const gameReducer = (state, action) => {
+    switch (action.type) {
+        case "ADD_GAMES":
+            return [
+                ...action.payload
+            ];
+
+        case "ADD_GAME":
+            return [
+                ...state,
+                action.payload
+            ];
+
+        case "EDIT_GAME":
+            return [
+                state.map(x => x._id == action.payload.gameId ? action.payload.gameData : x)
+            ];
+
+        case "DELETE_GAME":
+            return [
+                state.filter(x => x._id !== action.payload.gameId)
+            ];
+
+        default:
+            return [...state];
+    }
+}
+
 export const GameProvider = ({
     children,
 }) => {
-    const [games, setGames] = useState([]);
+    const [games, gameDispatcher] = useReducer(gameReducer, []);
 
-    const gameAdd = (gameData) => {
-        setGames(games => ([
-            ...games,
-            gameData
-        ]));
-    }
-    const gameEdit = (gameId, gameData) => {
-        setGames(state => [
-            state.map(x => x._id === gameId ? gameData : x)
-        ]);
-    }
-    const gameDelete = (gameId) => {
-        setGames(state => ([
-            state.filter(x => x._id !== gameId)
-        ]));
-    }
     useEffect(() => {
         gameService.getAll()
             .then(result => {
-                setGames(result);
+                gameDispatcher({
+                    type: 'ADD_GAMES',
+                    payload: result,
+                });
             });
     }, []);
+    const refreshGames = () => {
+        gameService.getAll()
+            .then(result => {
+                gameDispatcher({
+                    type: 'ADD_GAMES',
+                    payload: result,
+                });
+            });
+    }
+    const gameAdd = (gameData) => {
+        gameDispatcher({
+            type: 'ADD_GAME',
+            payload: gameData,
+        });
+    }
+    const gameEdit = (gameId, gameData) => {
+        gameDispatcher({
+            type: 'EDIT_GAME',
+            payload: {
+                gameData,
+                gameId
+            },
+        });
+    }
+    const gameDelete = (gameId) => {
+        gameDispatcher({
+            type: 'DELETE_GAME',
+            payload: { gameId }
+        });
+    }
 
     return (
-        <GameContext.Provider value={{ games, gameAdd, gameEdit, setGames, gameDelete }}>
+        <GameContext.Provider value={{ games, gameAdd, gameEdit, gameDelete, refreshGames }}>
             {children}
         </GameContext.Provider>
     );

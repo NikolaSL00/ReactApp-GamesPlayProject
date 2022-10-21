@@ -4,14 +4,8 @@ import CatalogGame from "./game/CatalogGame";
 import * as gameService from '../../services/gameService';
 
 const Catalogue = () => {
-    const { games, setGames } = useContext(GameContext);
-
-    useEffect(() => {
-        gameService.getAll()
-            .then(result => {
-                setGames(result);
-            });
-    }, []);
+    const { games, refreshGames } = useContext(GameContext);
+    refreshGames();
 
     return (
         <section id="catalog-page">
