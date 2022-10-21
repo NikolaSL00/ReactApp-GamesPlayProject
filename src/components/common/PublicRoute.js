@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export const PublicRoute = ({
@@ -11,9 +11,10 @@ export const PublicRoute = ({
         return <Navigate to={'/'} replace />
     }
 
-    return (
-        <>
-            {children}
-        </>
-    );
+    // return (
+    // <>
+    // {children}
+    // </>
+    // );
+    return children ? children : <Outlet />;
 }
