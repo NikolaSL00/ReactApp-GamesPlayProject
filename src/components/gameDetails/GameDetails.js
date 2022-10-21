@@ -9,12 +9,14 @@ import { GameContext } from "../../contexts/GameContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const GameDetails = () => {
-    const { games } = useContext(GameContext);
+    const navigate = useNavigate();
     const { gameId } = useParams();
+
+    const { games } = useContext(GameContext);
+    const { user } = useContext(AuthContext);
+
     const [game, setGame] = useState({});
     const [comments, setComments] = useState([]);
-    const { user } = useContext(AuthContext);
-    const navigate = useNavigate();
     const [comment, setComment] = useState('');
 
     const { gameDelete } = useContext(GameContext);
@@ -28,7 +30,7 @@ const GameDetails = () => {
     }, [gameId]);
 
     useEffect(() => {
-        commentService.getAll(gameId)
+        commentService.getAllPopulatedWithAuthor(gameId)
             .then(allComments => {
                 setComments(allComments);
             });
@@ -41,11 +43,9 @@ const GameDetails = () => {
                 navigate('/catalogue');
             });
     }
-
     const onChangeHandler = (e) => {
         setComment(state => e.target.value);
     }
-
     const onSubmitHandler = (e) => {
         e.preventDefault();
 
@@ -54,6 +54,7 @@ const GameDetails = () => {
 
         commentService.create({ gameId, comment })
             .then(result => {
+                result.user = user;
                 setComments(comments => [
                     ...comments,
                     result
@@ -100,7 +101,7 @@ const GameDetails = () => {
 
             </div>
 
-            <article className="create-comment">
+            {user.email && <article className="create-comment">
                 <label>Add new comment:</label>
                 <form className="form" onSubmit={onSubmitHandler}>
                     <textarea
@@ -115,7 +116,7 @@ const GameDetails = () => {
                         defaultValue="Add Comment"
                     />
                 </form>
-            </article>
+            </article>}
 
         </section>
     );

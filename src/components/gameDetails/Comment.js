@@ -5,7 +5,8 @@ const Comment = ({
 }) => {
     return (
         <li className="comment">
-            <p>Content: {comment.comment}</p>
+            <p><b>{comment.comment}</b></p>
+            <p><i>author: {comment?.user?.email}</i></p>
         </li>
     );
 }
