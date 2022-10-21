@@ -37,11 +37,14 @@ const GameDetails = () => {
     }, []);
 
     const deleteHandler = (e) => {
-        gameService.del(gameId)
-            .then(res => {
-                gameDelete(gameId);
-                navigate('/catalogue');
-            });
+        const confirmation = window.confirm("Are you sure you want to delete this game?");
+        if (confirmation) {
+            gameService.del(gameId)
+                .then(res => {
+                    gameDelete(gameId);
+                    navigate('/catalogue');
+                });
+        }
     }
     const onChangeHandler = (e) => {
         setComment(state => e.target.value);

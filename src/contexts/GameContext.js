@@ -18,12 +18,12 @@ const gameReducer = (state, action) => {
 
         case "EDIT_GAME":
             return [
-                state.map(x => x._id == action.payload.gameId ? action.payload.gameData : x)
+                state.map(x => x._id == action.gameId ? action.payload : x)
             ];
 
         case "DELETE_GAME":
             return [
-                state.filter(x => x._id !== action.payload.gameId)
+                state.filter(x => x._id !== action.gameId)
             ];
 
         default:
@@ -63,16 +63,14 @@ export const GameProvider = ({
     const gameEdit = (gameId, gameData) => {
         gameDispatcher({
             type: 'EDIT_GAME',
-            payload: {
-                gameData,
-                gameId
-            },
+            payload: gameData,
+            gameId,
         });
     }
     const gameDelete = (gameId) => {
         gameDispatcher({
             type: 'DELETE_GAME',
-            payload: { gameId }
+            gameId,
         });
     }
 
