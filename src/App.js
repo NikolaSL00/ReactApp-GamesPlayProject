@@ -9,10 +9,12 @@ import Logout from './components/logout/Logout';
 import CreateGame from './components/createGame/CreateGame';
 import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
+import { PublicRoute } from './components/common/PublicRoute';
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { GameProvider } from './contexts/GameContext';
 import { EditGame } from './components/editGame/EditGame';
+import { PrivateRoute } from './components/common/PrivateRoute';
 
 
 function App() {
@@ -25,13 +27,26 @@ function App() {
                     <GameProvider>
                         <Routes>
                             <Route path='/' element={<Home />} />
-                            <Route path='/login' element={<Login />} />
-                            <Route path='/register' element={<Register />} />
-                            <Route path='/logout' element={<Logout />} />
-                            <Route path='/create' element={<CreateGame />} />
                             <Route path='/catalogue' element={<Catalogue />} />
-                            <Route path='/edit/:gameId' element={<EditGame />} />
                             <Route path='/game/:gameId' element={<GameDetails />} />
+
+                            <Route path='/login' element={
+                                <PublicRoute>
+                                    <Login />
+                                </PublicRoute>
+                            } />
+                            <Route path='/register' element={
+                                <PublicRoute>
+                                    <Register />
+                                </PublicRoute>
+                            }
+                            />
+                            <Route element={<PrivateRoute />}>
+                                <Route path='/create' element={<CreateGame />} />
+                                <Route path='/edit/:gameId' element={<EditGame />} />
+                                <Route path='/logout' element={<Logout />} />
+                            </Route>
+
                         </Routes>
                     </GameProvider>
                 </main>

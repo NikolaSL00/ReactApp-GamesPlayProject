@@ -75,7 +75,13 @@ export const GameProvider = ({
     }
 
     return (
-        <GameContext.Provider value={{ games, gameAdd, gameEdit, gameDelete, refreshGames }}>
+        <GameContext.Provider value={{
+            games,
+            gameAdd,
+            gameEdit,
+            gameDelete,
+            refreshGames
+        }}>
             {children}
         </GameContext.Provider>
     );

@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { LOCAL_STORAGE_KEY } from '../config/constants';
 
-export const AuthContext = createContext({ user: {} });
+export const AuthContext = createContext({ user: {}, isAuthenticated: false });
 
 export const AuthProvider = ({
     children,
@@ -20,7 +20,12 @@ export const AuthProvider = ({
         setAuth({});
     }
     return (
-        <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
+        <AuthContext.Provider value={{
+            user: auth,
+            userLogin,
+            userLogout,
+            isAuthenticated: Boolean(auth.accessToken),
+        }}>
             {children}
         </AuthContext.Provider>
     );
