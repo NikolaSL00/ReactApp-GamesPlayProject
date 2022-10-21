@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { LOCAL_STORAGE_KEY } from '../config/constants';
@@ -24,4 +24,23 @@ export const AuthProvider = ({
             {children}
         </AuthContext.Provider>
     );
+}
+
+// custom hook
+export const useAuthContext = () => {
+    const context = useContext(AuthContext);
+    return context;
+}
+
+
+// with HOC
+export const withAuth = (Component) => {
+    const WrapperComponent = (props) => {
+        //added logic
+        const context = useContext(AuthContext);
+
+        return <Component {...props} auth={context} />
+    }
+
+    return WrapperComponent;
 }
