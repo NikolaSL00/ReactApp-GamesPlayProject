@@ -73,6 +73,9 @@ export const GameProvider = ({
             gameId,
         });
     }
+    const selectGame = (gameId) => {
+        return games.find(x => x._id === gameId) || {};
+    }
 
     return (
         <GameContext.Provider value={{
@@ -80,7 +83,8 @@ export const GameProvider = ({
             gameAdd,
             gameEdit,
             gameDelete,
-            refreshGames
+            refreshGames,
+            selectGame
         }}>
             {children}
         </GameContext.Provider>

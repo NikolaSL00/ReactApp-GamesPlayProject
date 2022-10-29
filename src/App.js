@@ -10,11 +10,12 @@ import CreateGame from './components/createGame/CreateGame';
 import Catalogue from './components/catalogue/Catalogue';
 import GameDetails from './components/gameDetails/GameDetails';
 import { PublicRoute } from './components/common/PublicRoute';
+import { PrivateRoute } from './components/common/PrivateRoute';
+import { GameOwner } from './components/common/GameOwner';
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { GameProvider } from './contexts/GameContext';
 import { EditGame } from './components/editGame/EditGame';
-import { PrivateRoute } from './components/common/PrivateRoute';
 
 
 function App() {
@@ -41,10 +42,14 @@ function App() {
                                 </PublicRoute>
                             }
                             />
+
                             <Route element={<PrivateRoute />}>
                                 <Route path='/create' element={<CreateGame />} />
-                                <Route path='/edit/:gameId' element={<EditGame />} />
                                 <Route path='/logout' element={<Logout />} />
+
+                                <Route element={<GameOwner />}>
+                                    <Route path='/edit/:gameId' element={<EditGame />} />
+                                </Route>
                             </Route>
 
                         </Routes>
